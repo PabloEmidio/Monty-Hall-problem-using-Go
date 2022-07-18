@@ -16,15 +16,15 @@ func getRandomDoor() int {
 }
 
 
-func swithDoor(playerChoice int, doorWasOpenned int) int{
-	if (playerChoice == 2 && doorWasOpenned == 3) || (playerChoice == 3 && doorWasOpenned == 2){
-		return 1
-	} else if (playerChoice == 1 && doorWasOpenned == 3) || (playerChoice == 3 && doorWasOpenned == 1){
-		return 2
-	} else if (playerChoice == 1 && doorWasOpenned == 2) || (playerChoice == 2 && doorWasOpenned == 1){
-		return 3
+func switchDoor(playerChoice *int, doorOpenned int){
+	if (*playerChoice == 2 && doorOpenned == 3) || (*playerChoice == 3 && doorOpenned == 2){
+		*playerChoice = 1
+	} else if (*playerChoice == 1 && doorOpenned == 3) || (*playerChoice == 3 && doorOpenned == 1){
+		*playerChoice = 2
+	} else if (*playerChoice == 1 && doorOpenned == 2) || (*playerChoice == 2 && doorOpenned == 1){
+		*playerChoice = 3
 	} else {
-		return 0
+		*playerChoice = 0
 	}
 }
 
@@ -32,7 +32,7 @@ func swithDoor(playerChoice int, doorWasOpenned int) int{
 func main(){
 	rand.Seed(time.Now().UnixNano())
 
-	var carPosition, doorWillBeOpenned, playerChoice, playerFinalChoice, playerWon int
+	var carPosition, doorOpenned, playerChoice, playerWon int
 	var winningsPercentage float32
 
 	for i:=1; i < simulationTimes; i++ {
@@ -40,21 +40,21 @@ func main(){
 		playerChoice = getRandomDoor()
 
 		for {
-			doorWillBeOpenned = getRandomDoor()
+			doorOpenned = getRandomDoor()
 
-			if doorWillBeOpenned != carPosition && doorWillBeOpenned != playerChoice {
+			if doorOpenned != carPosition && doorOpenned != playerChoice {
 				break
 			}
 		}
 
-		playerFinalChoice = swithDoor(playerChoice, doorWillBeOpenned)
+		switchDoor(&playerChoice, doorOpenned)
 
-		if playerFinalChoice == 0 {
-			fmt.Println("An error occurred") // Indicate a bad combination between playerChoice and doorWillBeOpenned
+		if playerChoice == 0 {
+			fmt.Println("An error occurred") // Indicate a bad combination between playerChoice and doorOpenned
 			return
 		}
 
-		if playerFinalChoice == carPosition {
+		if playerChoice == carPosition {
 			playerWon++
 		}
 
